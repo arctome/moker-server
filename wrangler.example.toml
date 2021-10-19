@@ -1,0 +1,34 @@
+name = "moker-server"
+type = "webpack"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+webpack_config = "node_modules/flareact/webpack"
+compatibility_date = "2021-10-11"
+
+kv_namespaces = [
+    {binding = "MOKER_STORAGE_USER", id = "", preview_id = ""},
+    {binding = "MOKER_STORAGE_TOKEN", id = "", preview_id = ""},
+    {binding = "MOKER_STORAGE_CASES", id = "", preview_id = ""},
+    {binding = "MOKER_STORAGE_RECORD", id = "", preview_id = ""},
+    {binding = "MOKER_SESSION_USER", id = "", preview_id = ""}
+]
+
+[site]
+bucket = "out"
+entry-point = "./"
+
+[vars]
+# Variables
+MOKER_VARS_SESS_KEY = "MOKER_EXAMPLE_SESS"
+MOKER_VARS_DEPLOY_DOMAIN = ""
+MOKER_VARS_JWT_SECRET = "jwt_secret"
+MOKER_VARS_HMAC_SALT = "randomsalt"
+# KV Storage => kv_namespaces
+# Session => kv_namespaces
+# Admin Setting
+MOKER_ADMIN_PASSWORD = "superstrong"
+
+[miniflare]
+kv_persist = true
