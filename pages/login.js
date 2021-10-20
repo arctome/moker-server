@@ -3,8 +3,15 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 import { collectFormData } from '../client/utils'
 import { toast } from 'react-toastify';
 import axios from 'axios'
+import { useStore } from '../client/state-persistence/index'
 
 export default function LoginPage() {
+  const [state, dispatch] = useStore();
+
+  function dispatchLoginHandler(data) {
+    dispatch({type: 'login', data})
+  }
+
   const handleLoginSubmit = function(e) {
     e.preventDefault();
     let formVal = collectFormData(e.target);
@@ -23,6 +30,7 @@ export default function LoginPage() {
     }).then(r => {
       if(r.status === 200 && r.data.code) {
         toast.success("Login successful");
+        dispatchLoginHandler({user_id: formVal.username, username: r.data.data.name})
         setTimeout(() => {
           window.location.href = '/admin'
         }, 500)

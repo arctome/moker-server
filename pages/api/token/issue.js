@@ -18,7 +18,7 @@ export default async function IssueTokenApi(event) {
         const userid = verify.userid;
         const reqJson = await event.request.json().catch(e => {throw e})
         if(!reqJson.name) return new Response(null, {status: 400})
-        const token = await Token.Issue(userid, reqJson.name).catch(e => {throw e})
+        const token = await Token.Issue(userid, reqJson).catch(e => {throw e})
         return new Response(JSON.stringify({code: 1, data: {
             token
         }}))

@@ -2,8 +2,8 @@ import { nanoid } from 'nanoid';
 import * as jwt from '@tsndr/cloudflare-worker-jwt';
 
 const Token = {
-    Issue: async function (user_id, name) {
-        if (!user_id || !name) throw new Error("Required fields missing")
+    Issue: async function (user_id, data) {
+        if (!user_id || !data.name) throw new Error("Required fields missing")
         const token_id = nanoid(4);
         const tokenSignPayload = {
             user_id, token_id
@@ -11,7 +11,7 @@ const Token = {
         const token = await jwt.sign(tokenSignPayload, MOKER_VARS_JWT_SECRET).catch(e => {
             throw new Error("Internal service error: JWT")
         })
-        await MOKER_STORAGE_TOKEN.put(user_id + ':' + token_id, token, { metadata: { name, c_time: Date.now() } }).catch(e => { throw new Error("KV write error"); })
+        await MOKER_STORAGE_TOKEN.put(user_id + ':' + token_id, token, { metadata: { name: data.name, c_time: Date.now() } }).catch(e => { throw new Error("KV write error"); })
         return token;
     },
     Revoke: async function (user_id, token_id) {

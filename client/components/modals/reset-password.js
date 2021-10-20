@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useState, useImperativeHandle, useRef } from 'react'
+import React, { useState, useImperativeHandle } from 'react'
 import { toast } from 'react-toastify';
 import { Button, Form, Modal } from 'semantic-ui-react'
 import { collectFormData } from '../../utils'
 
-function AdminModalCreateToken(props, ref) {
+function ResetPasswordModal(props, ref) {
+  const userid = props.userid
   const [open, setOpen] = useState(false)
   const [requesting, setRequesting] = useState(false)
 
@@ -16,17 +17,22 @@ function AdminModalCreateToken(props, ref) {
     show
   }))
 
-  function createTokenHandler(e) {
+  function resetHandler(e) {
     e.preventDefault();
     let formVal = collectFormData(e.target);
+    if(formVal.password !== formVal.repeat_password) {
+      toast.error("Password mismatch");
+      return;
+    }
     setRequesting(true);
-    axios.post('/api/token/issue', formVal).then(res => {
+    axios.post('/api/user/reset-password', {...formVal, user_id: userid}).then(res => {
       setRequesting(false);
       if (res.status === 200 && res.data.code) {
-        props.showToken(res.data.data.token);
+        toast.success("Password reset successfully, redirecting to login page")
+        setOpen(false);
         setTimeout(() => {
-          setOpen(false);
-        }, 16)
+          window.location.href = '/api/user/logout'
+        }, 500)
       } else {
         toast.error("Request failed (" + (res.data.msg || "Unknown Message") + ")")
         return;
@@ -43,13 +49,21 @@ function AdminModalCreateToken(props, ref) {
       onOpen={() => setOpen(true)}
       open={open}
       as={Form}
-      onSubmit={createTokenHandler}
+      onSubmit={resetHandler}
     >
-      <Modal.Header>Create a Token</Modal.Header>
+      <Modal.Header>Reset Password</Modal.Header>
       <Modal.Content>
         <Form.Field>
-          <label>Token Name</label>
-          <input placeholder='Give the token a unique name' name='name' />
+          <label>Old Password</label>
+          <input name='old_password' type="password" />
+        </Form.Field>
+        <Form.Field>
+          <label>New Password</label>
+          <input name='password' type="password" />
+        </Form.Field>
+        <Form.Field>
+          <label>Repeat Password</label>
+          <input name='repeat_password' type="password" />
         </Form.Field>
       </Modal.Content>
       <Modal.Actions>
@@ -57,7 +71,7 @@ function AdminModalCreateToken(props, ref) {
           Cancel
         </Button>
         <Button
-          content="Create"
+          content="Submit"
           labelPosition='right'
           icon='checkmark'
           type='submit'
@@ -69,4 +83,4 @@ function AdminModalCreateToken(props, ref) {
   )
 }
 
-export default React.forwardRef(AdminModalCreateToken);
+export default React.forwardRef(ResetPasswordModal);
