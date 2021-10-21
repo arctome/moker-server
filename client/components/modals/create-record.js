@@ -1,12 +1,15 @@
 import axios from 'axios';
 import React, { useState, useImperativeHandle } from 'react'
 import { toast } from 'react-toastify';
-import { Button, Form, Modal } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Modal, Dropdown } from 'semantic-ui-react'
 import { collectFormData } from '../../utils'
 
-function AdminModalCreateUser(props, ref) {
+function CreateRecordModal(props, ref) {
+  const createCasesHandler = props.createCasesHandler
   const [open, setOpen] = useState(false)
   const [requesting, setRequesting] = useState(false)
+  const [collections, setCollections] = useState([])
+  const [currentCollections, setCurrentCollections] = useState([])
 
   function show() {
     setOpen(true);
@@ -16,25 +19,21 @@ function AdminModalCreateUser(props, ref) {
     show
   }))
 
-  function createTokenHandler(e) {
+  function createRecordHandler(e) {
     e.preventDefault();
     let formVal = collectFormData(e.target);
-    if(!formVal.user_id || !formVal.username || !formVal.password) {
+    if (!formVal.name || !formVal.url || !formVal.collections) {
       toast.error("All fields are required")
       return;
     }
-    if(formVal.password !== formVal.repeat_password) {
-      toast.error("Passwords mismatch, please check")
-      return;
-    }
     setRequesting(true);
-    axios.post('/api/admin/user/create', formVal).then(res => {
+    axios.post('/api/record/create', formVal).then(res => {
       setRequesting(false);
       if (res.status === 200 && res.data.code) {
         toast.success("Create Successfully");
+        createCasesHandler(res.data.data.record_id);
         setTimeout(() => {
           setOpen(false);
-          window.location.reload();
         }, 16)
       } else {
         toast.error("Request failed (" + (res.data.msg || "Unknown Message") + ")")
@@ -46,31 +45,51 @@ function AdminModalCreateUser(props, ref) {
     })
   }
 
+  // Dropdown
+  function handleAddition(e, data) {
+    let newArr = collections.slice()
+    newArr.push({text: data.value, key: data.value, value: data.value})
+    setCollections(newArr)
+  }
+  function handleChange(e, data) {
+    setCurrentCollections(data.value)
+  }
+
   return (
     <Modal
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
       as={Form}
-      onSubmit={createTokenHandler}
+      onSubmit={createRecordHandler}
     >
-      <Modal.Header>Create User</Modal.Header>
+      <Modal.Header>Create Record</Modal.Header>
       <Modal.Content>
         <Form.Field>
-          <label>User ID</label>
-          <input placeholder='A unique ID' name='user_id' />
+          <label>Name</label>
+          <input placeholder='A unique ID' name='name' />
         </Form.Field>
         <Form.Field>
-          <label>User Name</label>
-          <input placeholder='A unique name' name='username' />
+          <label>URL</label>
+          <input placeholder='A unique name' name='url' />
         </Form.Field>
         <Form.Field>
-          <label>Password</label>
-          <input name='password' type='password' />
+          <label>Collections</label>
+          <Dropdown
+            options={collections}
+            placeholder='Choose Collections'
+            search
+            selection
+            fluid
+            multiple
+            allowAdditions
+            value={currentCollections}
+            onAddItem={handleAddition}
+            onChange={handleChange}
+          />
         </Form.Field>
         <Form.Field>
-          <label>Repeat Password</label>
-          <input name='repeat_password' type='password' />
+          <Checkbox label='Only me visible?' />
         </Form.Field>
       </Modal.Content>
       <Modal.Actions>
@@ -78,9 +97,9 @@ function AdminModalCreateUser(props, ref) {
           Cancel
         </Button>
         <Button
-          content="Create"
+          content="Next"
           labelPosition='right'
-          icon='checkmark'
+          icon='angle right'
           type='submit'
           positive
           loading={requesting}
@@ -90,4 +109,4 @@ function AdminModalCreateUser(props, ref) {
   )
 }
 
-export default React.forwardRef(AdminModalCreateUser);
+export default React.forwardRef(CreateRecordModal);

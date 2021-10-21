@@ -2,8 +2,8 @@ import { nanoid } from 'nanoid';
 
 // Find record via 2 collections, "Record" & "Cases"
 const Record = {
-    CreateRecord: async function (user_id, data, cases, user_name = "") {
-        if (!data || !user_id || !cases || !Array.isArray(cases) || cases.length < 1) throw new Error("Required fields missing");
+    CreateRecord: async function (user_id, data, cases) {
+        if (!data || !user_id || !cases || !Array.isArray(cases)) throw new Error("Required fields missing");
         const record_id = nanoid(12);
         // Required fields: name
         if (!data.name || !data.url) throw new Error("Required fields missing");
@@ -29,10 +29,8 @@ const Record = {
                 url: data.url,
                 collection: data.collection || "",
                 private_read: data.private ? user_id : false,
-                owner: {
-                    user_id,
-                    user_name
-                }
+                owner_id: user_id,
+                c_time: Date.now()
             }
         })
         return record_id;
@@ -48,9 +46,8 @@ const Record = {
                 url: patch_data.url,
                 collection: patch_data.collection || "",
                 private_read: patch_data.private ? user_id : false,
-                owner: {
-                    ...oldCases.metadata.owner
-                }
+                owner_id: oldCases.metadata.owner_id,
+                c_time: oldCases.metadata.c_time
             }
         })
         return true;
@@ -154,7 +151,7 @@ const Record = {
                 result.push(
                     {
                         record_id,
-                        ...record.metadata
+                        ...key.metadata
                     }
                 )
             }

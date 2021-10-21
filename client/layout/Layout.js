@@ -41,8 +41,8 @@ function FixedMenuLayout(props) {
           </Menu.Item>
           <Dropdown item simple text='Library'>
             <Dropdown.Menu>
-              <Dropdown.Item>Records</Dropdown.Item>
-              <Dropdown.Item>Collections</Dropdown.Item>
+              <Dropdown.Item as="a" href="/admin/records">Records</Dropdown.Item>
+              <Dropdown.Item as="a" href="/admin/collections">Collections</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <Menu.Item>
@@ -62,7 +62,7 @@ function FixedMenuLayout(props) {
         </Container>
       </Menu>
 
-      <Container text style={{ marginTop: '7em' }}>
+      <Container style={{ marginTop: '7em' }}>
         {props.children}
       </Container>
     </div>

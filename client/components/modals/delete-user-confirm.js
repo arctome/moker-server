@@ -11,7 +11,7 @@ function DeleteUserConfirmModal(props, ref) {
   function deleteUser() {
     if (!user_id) return;
     setRequesting(true)
-    axios.post('/api/user/delete', { user_id }).then(res => {
+    axios.post('/api/admin/user/delete', { user_id }).then(res => {
       if (res.status === 200 && res.data.code) {
         toast.success("User has been deleted");
         setTimeout(() => {

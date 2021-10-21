@@ -15,7 +15,7 @@ export default function AdminRecordsPage() {
     axios.get('/api/admin/user/list').then(res => {
       setRequesting(false);
       if (res.status === 200 && res.data.code) {
-        console.log(res.data)
+        setUsers(res.data.data)
       } else {
         toast.error("Request failed (" + (res.data.msg || "Unknown Message") + ")")
         return;
@@ -53,7 +53,7 @@ export default function AdminRecordsPage() {
                   return (
                     <Table.Row key={user.user_id}>
                       <Table.Cell>{user.user_id}</Table.Cell>
-                      <Table.Cell>{user.name}</Table.Cell>
+                      <Table.Cell>{user.username}</Table.Cell>
                       <Table.Cell>
                         <DeleteUserConfirm trigger={<Button icon='trash' />} userid={user.user_id} />
                       </Table.Cell>
