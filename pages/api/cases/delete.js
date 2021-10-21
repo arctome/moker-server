@@ -2,7 +2,7 @@ import { requestTypeLimitor } from '../../../server/utils/utils'
 import UserVerify from '../../../server/controllers/user-verify'
 import Record from '../../../server/entity/record';
 
-export default async function DeleteRecordApi(event) {
+export default async function MockDeleteCaseApi(event) {
     let res = requestTypeLimitor(event, "POST");
     if (res) return res;
     try {

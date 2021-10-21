@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState, useImperativeHandle } from 'react'
+import React, { useState, useImperativeHandle , useEffect} from 'react'
 import { toast } from 'react-toastify';
-import { Button, Modal, Form, Dropdown, Label } from 'semantic-ui-react'
+import { Button, Modal, Form, Dropdown, Label, Icon, Checkbox } from 'semantic-ui-react'
+import { useStore } from '../../state-persistence';
 
 function RecordDetailModal(props, ref) {
     const [open, setOpen] = useState(false)
@@ -9,10 +10,16 @@ function RecordDetailModal(props, ref) {
     const [data, setData] = useState({})
     const [collections, setCollections] = useState([])
     const [currentCollections, setCurrentCollections] = useState([])
+    const createCasesHandler = props.createCasesHandler;
+    const [state, dispatch] = useStore()
+    const [currentUser, setCurrentUser] = useState({})
 
     function show(data) {
         setOpen(true);
         setData(data);
+        
+        setCollections(data.collections)
+        setCurrentCollections(data.collections)
     }
 
     useImperativeHandle(ref, () => ({
@@ -31,6 +38,9 @@ function RecordDetailModal(props, ref) {
     function handleChange(e, data) {
         setCurrentCollections(data.value)
     }
+    useEffect(() => {
+        if(state.user) setCurrentUser(state.user)
+    }, [state])
 
     return (
         <Modal
@@ -51,6 +61,13 @@ function RecordDetailModal(props, ref) {
                     <input placeholder='A unique name' name='url' defaultValue={data.url} />
                 </Form.Field>
                 <Form.Field>
+                    {/* <label>Visibility</label> */}
+                    {/* <Checkbox label='Only me visible?' name='private_read' defaultChecked={data.private_read} /> */}
+                    <label>Private Read</label>
+                    <input type="checkbox" name="private_read" defaultChecked={data.private_read} />
+                </Form.Field>
+                <Form.Field>
+                    {/* FIXME: Collections' dropdown doesn't show selected tag */}
                     <label>Collections</label>
                     <Dropdown
                         options={collections}
@@ -66,21 +83,36 @@ function RecordDetailModal(props, ref) {
                     />
                 </Form.Field>
                 <Form.Field>
-                    <Label>
-                        <Icon name='mail' />
-                        23
-                        <Label.Detail>View Mail</Label.Detail>
-                    </Label>
+                    <label>Cases</label>
+                    {
+                        data.cases && Array.isArray(data.cases) ? data.cases.map(k => {
+                            return (
+                                <Label>
+                                    <Icon name='external alternate' />
+                                    CASE:
+                                    <Label.Detail>{k.case_id}</Label.Detail>
+                                </Label>
+                            )
+                        }) : <p>No Cases created</p>
+                    }
                 </Form.Field>
             </Modal.Content>
             <Modal.Actions style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button
-                    content="Delete"
-                    labelPosition='right'
-                    icon='trash'
-                    negative
-                    loading={requesting}
-                />
+                <div>
+                    <Button
+                        content="Delete"
+                        labelPosition='right'
+                        icon='trash'
+                        negative
+                        loading={requesting}
+                    />
+                    <Button
+                        content="Create Case"
+                        labelPosition='right'
+                        icon='plus'
+                        onClick={() => {createCasesHandler(data.record_id)}}
+                    />
+                </div>
 
                 <div>
                     <Button color='black' onClick={() => setOpen(false)}>

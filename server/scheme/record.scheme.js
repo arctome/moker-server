@@ -4,7 +4,7 @@ const record = {
 	metadata: {
 		name: "",
 		url: "",
-		collection: "<collection_name>",
+		collections: "<collection_name>",
 		c_time: Date.now()
 	}
 }

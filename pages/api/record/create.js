@@ -29,7 +29,8 @@ export default async function MockCreateApi(event) {
         const record_id = await Record.CreateRecord(userid, {
             name: mockData.name,
             url: mockData.url,
-            collections: mockData.collections
+            collections: mockData.collections,
+            private_read: mockData.private_read ? true : false
         }, []).catch(e => { throw e })
         return new Response(JSON.stringify({
             code: 1, data: {

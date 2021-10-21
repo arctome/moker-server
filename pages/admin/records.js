@@ -81,7 +81,7 @@ export default function AdminRecordsPage() {
       </Table>
       <CreateRecord ref={createRecordRef} createCasesHandler={createCasesHandler} />
       <CreateCases ref={createCasesRef} />
-      <RecordDetail ref={recordDetailRef} />
+      <RecordDetail ref={recordDetailRef} createCasesHandler={createCasesHandler} />
     </Layout>
   )
 }

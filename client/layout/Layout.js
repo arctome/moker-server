@@ -20,7 +20,6 @@ function FixedMenuLayout(props) {
     if (!state.user) {
       axios.get('/api/user/info').then(res => {
         if (res.status === 200 && res.data.code) {
-          console.log(res.data.data)
           dispatch({ type: 'login', data: res.data.data })
         } else {
           toast.error('Fetch user info failed (' + (res.data.msg || 'Unknown Error') + ')')

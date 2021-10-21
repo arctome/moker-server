@@ -22,6 +22,8 @@ function CreateRecordModal(props, ref) {
   function createRecordHandler(e) {
     e.preventDefault();
     let formVal = collectFormData(e.target);
+    console.log(formVal)
+    formVal.collections = currentCollections;
     if (!formVal.name || !formVal.url || !formVal.collections) {
       toast.error("All fields are required")
       return;
@@ -89,7 +91,9 @@ function CreateRecordModal(props, ref) {
           />
         </Form.Field>
         <Form.Field>
-          <Checkbox label='Only me visible?' />
+          {/* <Checkbox label='Only me visible?' name='private_read' /> */}
+          <label>Private Read</label>
+          <input type="checkbox" name="private_read" />
         </Form.Field>
       </Modal.Content>
       <Modal.Actions>

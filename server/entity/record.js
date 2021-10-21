@@ -22,20 +22,19 @@ const Record = {
                 }
             }))
         }
-        await Promise.all(createCasesQuene).catch(e => { throw e });
+        if(createCasesQuene.length > 0) await Promise.all(createCasesQuene).catch(e => { throw e });
         await MOKER_STORAGE_RECORD.put(record_id, casesId.join(','), {
             metadata: {
                 name: data.name,
                 url: data.url,
-                collection: data.collection || "",
-                private_read: data.private ? user_id : false,
+                collections: data.collections || "",
+                private_read: data.private_read ? user_id : false,
                 owner_id: user_id,
                 c_time: Date.now()
             }
         })
         return record_id;
     },
-    // FIXME:
     UpdateRecordMetadata: async function (user_id, record_id, patch_data) {
         if (!user_id || !record_id || !patch_data) throw new Error("Requied fields missing");
         let oldCases = await MOKER_STORAGE_RECORD.getWithMetadata(user_id + ':' + record_id).catch(e => { throw e });
@@ -44,8 +43,8 @@ const Record = {
             metadata: {
                 name: patch_data.name,
                 url: patch_data.url,
-                collection: patch_data.collection || "",
-                private_read: patch_data.private ? user_id : false,
+                collections: patch_data.collections || "",
+                private_read: patch_data.private_read ? user_id : false,
                 owner_id: oldCases.metadata.owner_id,
                 c_time: oldCases.metadata.c_time
             }
@@ -139,6 +138,15 @@ const Record = {
         })
         await Promise.all(cleanCasesQuene).catch(e => { console.log("Errors occur in deleting " + record_id + "'s cases (" + e.message + ")") })
         return true;
+    },
+    DelCaseFromRecord: async function (user_id, record_id, case_id) {
+        if (!user_id || !record_id || !case_id) throw new Error("Requied fields missing");
+        let oldRecord = await MOKER_STORAGE_RECORD.getWithMetadata(record_id).catch(e => {throw e});
+        let oldCase = await this.ReadRecordCase(user_id, record_id, case_id).catch(e => { throw e });
+        if (!oldRecord.value || !oldCase || oldRecord.value.indexOf(case_id) < 0) return false;
+        oldRecord = oldRecord.value.split(",")
+        await MOKER_STORAGE_RECORD.put(record_id, oldRecord.splice(oldRecord.indexOf(case_id), 1).join(",")).catch(e => {throw e});
+        await MOKER_STORAGE_CASES.delete(record_id + ':' + case_id)
     },
     ListRecords: async function (user_id, collection = "", cursor = "") {
         if (!user_id) throw new Error("Requied fields missing");

@@ -20,17 +20,14 @@ export default async function MockCreateApi(event) {
         if(!mockData.record_id) return new Response(null, {
             status: 400
         })
-        if (!mockData.cases || !Array.isArray(mockData.cases)) {
-            return new Response(JSON.stringify({
-                code: 0,
-                msg: "Cases not found"
-            }))
-        }
         const patchData = {}
         if(mockData.name) patchData.name = mockData.name;
         if(mockData.url) patchData.url = mockData.url;
-        if(mockData.cases && Array.isArray(mockData.cases)) patchData.cases = mockData.cases;
-        await Record.UpdateRecord(userid, mockData.record_id, patchData).catch(e => { throw e })
+        if(mockData.collections && Array.isArray(mockData.collections)) {
+            patchData.collections = mockData.collections.join(",");
+        }
+        if(mockData.private_read) patchData.private_read = true;
+        await Record.UpdateRecordMetadata(userid, mockData.record_id, patchData).catch(e => { throw e })
         return new Response(JSON.stringify({
             code: 1, data: {
                 record_id
