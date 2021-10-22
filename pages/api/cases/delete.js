@@ -17,10 +17,10 @@ export default async function MockDeleteCaseApi(event) {
         }
         const userid = verify.userid;
         const reqJson = await event.request.json().catch(e => { throw e })
-        if (!reqJson.record_id) return new Response(null, {
+        if (!reqJson.record_id || !reqJson.case_id) return new Response(null, {
             status: 400
         })
-        await Record.DelRecord(userid, reqJson.record_id).catch(e => { throw e })
+        await Record.RemoveCaseFromRecord(userid, reqJson.record_id, reqJson.case_id).catch(e => { throw e })
         return new Response(JSON.stringify({ code: 1 }));
     } catch (e) {
         return new Response(e.message, {

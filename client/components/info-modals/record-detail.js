@@ -1,8 +1,9 @@
 import axios from 'axios';
-import React, { useState, useImperativeHandle , useEffect} from 'react'
+import React, { useState, useImperativeHandle, useEffect } from 'react'
 import { toast } from 'react-toastify';
-import { Button, Modal, Form, Dropdown, Label, Icon, Checkbox } from 'semantic-ui-react'
+import { Button, Modal, Form, Dropdown, Label, Icon } from 'semantic-ui-react'
 import { useStore } from '../../state-persistence';
+import { collectFormData, convertPureArrToDropdownOpt } from '../../utils'
 
 function RecordDetailModal(props, ref) {
     const [open, setOpen] = useState(false)
@@ -17,9 +18,9 @@ function RecordDetailModal(props, ref) {
     function show(data) {
         setOpen(true);
         setData(data);
-        
-        setCollections(data.collections)
-        setCurrentCollections(data.collections)
+
+        setCollections(convertPureArrToDropdownOpt(data.collections))
+        setCurrentCollections(convertPureArrToDropdownOpt(data.collections))
     }
 
     useImperativeHandle(ref, () => ({
@@ -28,10 +29,13 @@ function RecordDetailModal(props, ref) {
 
     function updateRecordHandler(e) {
         e.preventDefault();
+        let formVal = collectFormData(e.target)
+        formVal.collections = currentCollections.join(",")
+        return;
     }
     // Dropdown
     function handleAddition(e, data) {
-        let newArr = collections.slice()
+        let newArr = collections
         newArr.push({ text: data.value, key: data.value, value: data.value })
         setCollections(newArr)
     }
@@ -39,8 +43,33 @@ function RecordDetailModal(props, ref) {
         setCurrentCollections(data.value)
     }
     useEffect(() => {
-        if(state.user) setCurrentUser(state.user)
+        if (state.user) setCurrentUser(state.user)
     }, [state])
+    function fetchRecordCases(record_id) {
+        axios.get('/api/record/find', { params: { "record_id": record_id } }).then(res => {
+            if (res.status === 200 && res.data.code) {
+                setData({ ...data, cases: res.data.data.cases ? res.data.data.cases.split(",") : [] })
+            }
+        })
+    }
+    useEffect(() => {
+        if (data.record_id) {
+            fetchRecordCases(data.record_id)
+        }
+    }, [data.record_id])
+    function editCaseModal(record_id, case_id) {
+        createCasesHandler(record_id, case_id)
+    }
+    function delCaseHandler(record_id, case_id) {
+        axios.post('/api/cases/delete', { record_id, case_id }).then(res => {
+            if (res.status === 200 && res.data.code) {
+                toast.success("Case deleted successfully")
+                setOpen(false)
+            } else {
+                console.log(res)
+            }
+        })
+    }
 
     return (
         <Modal
@@ -67,7 +96,6 @@ function RecordDetailModal(props, ref) {
                     <input type="checkbox" name="private_read" defaultChecked={data.private_read} />
                 </Form.Field>
                 <Form.Field>
-                    {/* FIXME: Collections' dropdown doesn't show selected tag */}
                     <label>Collections</label>
                     <Dropdown
                         options={collections}
@@ -87,13 +115,17 @@ function RecordDetailModal(props, ref) {
                     {
                         data.cases && Array.isArray(data.cases) ? data.cases.map(k => {
                             return (
-                                <Label>
+                                <Label style={{ cursor: 'pointer' }} onClick={() => { editCaseModal(data.record_id, k) }}>
                                     <Icon name='external alternate' />
-                                    CASE:
-                                    <Label.Detail>{k.case_id}</Label.Detail>
+                                    CASE
+                                    <Label.Detail>{k}</Label.Detail>
+                                    <Icon name='delete' onClick={(e) => {
+                                        e.stopPropagation();
+                                        delCaseHandler(data.record_id, k);
+                                    }} />
                                 </Label>
                             )
-                        }) : <p>No Cases created</p>
+                        }) : ""
                     }
                 </Form.Field>
             </Modal.Content>
@@ -110,7 +142,7 @@ function RecordDetailModal(props, ref) {
                         content="Create Case"
                         labelPosition='right'
                         icon='plus'
-                        onClick={() => {createCasesHandler(data.record_id)}}
+                        onClick={() => { createCasesHandler(data.record_id) }}
                     />
                 </div>
 

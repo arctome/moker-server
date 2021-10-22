@@ -30,7 +30,7 @@ export default async function MockCreateApi(event) {
             name: mockData.name,
             url: mockData.url,
             collections: mockData.collections,
-            private_read: mockData.private_read ? true : false
+            private_read: mockData.private_read === 'on' ? true : false
         }, []).catch(e => { throw e })
         return new Response(JSON.stringify({
             code: 1, data: {

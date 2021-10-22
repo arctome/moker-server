@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useImperativeHandle } from 'react'
 import { toast } from 'react-toastify';
-import { Button, Checkbox, Form, Modal, Dropdown } from 'semantic-ui-react'
+import { Button, Form, Modal, Dropdown } from 'semantic-ui-react'
 import { collectFormData } from '../../utils'
 
 function CreateRecordModal(props, ref) {
@@ -22,7 +22,6 @@ function CreateRecordModal(props, ref) {
   function createRecordHandler(e) {
     e.preventDefault();
     let formVal = collectFormData(e.target);
-    console.log(formVal)
     formVal.collections = currentCollections;
     if (!formVal.name || !formVal.url || !formVal.collections) {
       toast.error("All fields are required")

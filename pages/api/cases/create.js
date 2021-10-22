@@ -23,7 +23,7 @@ export default async function MockCreateCaseApi(event) {
         //         msg: "Cases not found"
         //     }))
         // }
-        const result = await Record.UpdateRecordCase(userid, mockData.record_id, mockData.case_id, mockData).catch(e => { throw e })
+        const result = await Record.AddCaseToRecord(userid, mockData.record_id, mockData).catch(e => { throw e })
         return new Response(JSON.stringify({
             code: result ? 1 : 0
         }))

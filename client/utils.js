@@ -76,3 +76,7 @@ export const loadScript = (url) => new Promise((resolve, reject) => {
         tag.parentNode.insertBefore(script, tag);
     }
 });
+
+export function convertPureArrToDropdownOpt(arr) {
+    return arr.map(k => {return {key: k, value: k, text: k}});
+}

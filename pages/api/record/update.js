@@ -26,7 +26,7 @@ export default async function MockCreateApi(event) {
         if(mockData.collections && Array.isArray(mockData.collections)) {
             patchData.collections = mockData.collections.join(",");
         }
-        if(mockData.private_read) patchData.private_read = true;
+        if(mockData.private_read === 'on') patchData.private_read = true;
         await Record.UpdateRecordMetadata(userid, mockData.record_id, patchData).catch(e => { throw e })
         return new Response(JSON.stringify({
             code: 1, data: {

@@ -41,7 +41,7 @@ function FixedMenuLayout(props) {
           <Dropdown item simple text='Library'>
             <Dropdown.Menu>
               <Dropdown.Item as="a" href="/admin/records">Records</Dropdown.Item>
-              <Dropdown.Item as="a" href="/admin/collections">Collections</Dropdown.Item>
+              {/* <Dropdown.Item as="a" href="/admin/collections">Collections</Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
           <Menu.Item>

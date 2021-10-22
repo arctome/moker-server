@@ -1,12 +1,12 @@
 import Layout from '../../client/layout/Layout'
-import { Dimmer, Loader, Table, Button } from 'semantic-ui-react'
+import { Dimmer, Loader, Table, Button, Dropdown } from 'semantic-ui-react'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import dayjs from 'dayjs'
 import CreateRecord from '../../client/components/modals/create-record'
 import CreateCases from '../../client/components/modals/create-cases'
-import { copyToClipboard } from '../../client/utils'
+import { copyToClipboard, convertPureArrToDropdownOpt } from '../../client/utils'
 import RecordDetail from '../../client/components/info-modals/record-detail'
 
 export default function AdminRecordsPage() {
@@ -15,9 +15,15 @@ export default function AdminRecordsPage() {
   const createRecordRef = useRef(null)
   const createCasesRef = useRef(null)
   const recordDetailRef = useRef(null)
+  const [collectionOptions, setCollectionOptions] = useState(false)
 
   useEffect(() => {
     setRequesting(true)
+    fetchList()
+    fetchAllCollections()
+  }, [])
+
+  function fetchList() {
     axios.get('/api/record/list').then(res => {
       setRequesting(false)
       if (res.status === 200 && res.data.code) {
@@ -29,13 +35,25 @@ export default function AdminRecordsPage() {
       toast.error("Axios error (" + err.message + ")")
       return;
     })
-  }, [])
+  }
+  function fetchAllCollections() {
+    axios.get('/api/record/all-collections').then(res => {
+      if (res.status === 200 && res.data.code) {
+        setCollectionOptions(convertPureArrToDropdownOpt(res.data.data))
+      } else {
+        toast.error("Request failed (" + (res.data.msg || "Unknown Message") + ")")
+      }
+    }).catch(err => {
+      toast.error("Axios error (" + err.message + ")")
+      return;
+    })
+  }
 
   function createHandler() {
     createRecordRef.current.show()
   }
-  function createCasesHandler(record_id) {
-    createCasesRef.current.show(record_id)
+  function createCasesHandler(record_id, case_id) {
+    createCasesRef.current.show(record_id, case_id)
   }
 
   function copyMockID(id) {
@@ -45,9 +63,16 @@ export default function AdminRecordsPage() {
 
   return (
     <Layout>
-      <div style={{ marginBottom: '10px' }}>
+      <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between' }}>
         <Button icon="plus" onClick={createHandler}>Create Record</Button>
-        {/* <Button icon="plus" onClick={createCasesHandler}>Debugger Create Case</Button> */}
+        <Dropdown
+          placeholder='Search Collection'
+          fluid
+          search
+          clearable
+          selection
+          options={collectionOptions}
+        />
       </div>
       <Table striped compact>
         <Table.Header>
@@ -82,6 +107,7 @@ export default function AdminRecordsPage() {
       <CreateRecord ref={createRecordRef} createCasesHandler={createCasesHandler} />
       <CreateCases ref={createCasesRef} />
       <RecordDetail ref={recordDetailRef} createCasesHandler={createCasesHandler} />
+
     </Layout>
   )
 }
