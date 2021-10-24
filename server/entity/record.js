@@ -39,9 +39,9 @@ const Record = {
     },
     UpdateRecordMetadata: async function (user_id, record_id, patch_data) {
         if (!user_id || !record_id || !patch_data) throw new Error("Requied fields missing");
-        let oldCases = await MOKER_STORAGE_RECORD.getWithMetadata(user_id + ':' + record_id).catch(e => { throw e });
+        let oldCases = await MOKER_STORAGE_RECORD.getWithMetadata(record_id).catch(e => { throw e });
         if (!oldCases) return false;
-        await MOKER_STORAGE_RECORD.put(user_id + ':' + record_id, oldCases.value, {
+        await MOKER_STORAGE_RECORD.put(record_id, oldCases.value, {
             metadata: {
                 name: patch_data.name,
                 url: patch_data.url,

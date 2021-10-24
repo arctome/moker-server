@@ -16,7 +16,8 @@ export default async function GetFullMockRecordApi(event) {
             })
         }
         const userid = verify.userid;
-        const record = await Record.ListRecords(userid);
+        const collection = getParam(event, "collection")
+        const record = await Record.ListRecords(userid, collection || "");
         if (!record) return new Response(JSON.stringify({ code: 0 }))
         return new Response(JSON.stringify({ code: 1, data: record.sort((a, b) => b.c_time - a.c_time) }))
     } catch (e) {

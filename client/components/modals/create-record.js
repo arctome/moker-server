@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState, useImperativeHandle } from 'react'
 import { toast } from 'react-toastify';
 import { Button, Form, Modal, Dropdown } from 'semantic-ui-react'
-import { collectFormData } from '../../utils'
+import { collectFormData, convertPureArrToDropdownOpt } from '../../utils'
 
 function CreateRecordModal(props, ref) {
   const createCasesHandler = props.createCasesHandler
@@ -11,8 +11,9 @@ function CreateRecordModal(props, ref) {
   const [collections, setCollections] = useState([])
   const [currentCollections, setCurrentCollections] = useState([])
 
-  function show() {
+  function show(dataCollection) {
     setOpen(true);
+    setCollections(dataCollection)
   }
 
   useImperativeHandle(ref, () => ({

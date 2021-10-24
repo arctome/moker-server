@@ -28,7 +28,7 @@ export function uuidv4() {
 * @param {string} key 查找的cookie字符串
 */
 export function getCookie(cookieStr, key) {
-    if (cookieStr === null) return '';
+    if (!cookieStr) return '';
     let cookieArr = cookieStr.split('; ')
     for (let i = 0; i < cookieArr.length; i++) {
         let temp = cookieArr[i].split('=')

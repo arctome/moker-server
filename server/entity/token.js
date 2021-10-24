@@ -29,7 +29,7 @@ const Token = {
         // Verifing token
         const isValid = await jwt.verify(token, MOKER_VARS_JWT_SECRET).catch(e => { throw e })
         if (!isValid) return false;
-        const tokenPayload = await jwt.decode(token).catch(e => { throw e });
+        const tokenPayload = jwt.decode(token);
         const tokenExist = await MOKER_STORAGE_TOKEN.get(tokenPayload.user_id + ':' + tokenPayload.token_id);
         if (tokenExist !== token) return false;
         return tokenPayload;

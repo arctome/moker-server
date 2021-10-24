@@ -20,7 +20,7 @@ function RecordDetailModal(props, ref) {
         setData(data);
 
         setCollections(convertPureArrToDropdownOpt(data.collections))
-        setCurrentCollections(convertPureArrToDropdownOpt(data.collections))
+        setCurrentCollections(data.collections)
     }
 
     useImperativeHandle(ref, () => ({
@@ -30,8 +30,25 @@ function RecordDetailModal(props, ref) {
     function updateRecordHandler(e) {
         e.preventDefault();
         let formVal = collectFormData(e.target)
-        formVal.collections = currentCollections.join(",")
-        return;
+        if(!data.record_id) {
+            toast.error("No record id detected!")
+            return;
+        }
+        formVal.record_id = data.record_id;
+        formVal.collections = currentCollections
+        axios.post('/api/record/update', formVal).then(res => {
+            if(res.status === 200 && res.data.code) {
+                toast.success("Record updated successfully");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 500)
+            } else {
+                toast.error(res.data.msg || "Unknow error occurs");
+                console.log(res)
+            }
+        }).catch(err => {
+            toast.error(err.message || "Axios error")
+        })
     }
     // Dropdown
     function handleAddition(e, data) {

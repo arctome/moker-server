@@ -23,8 +23,12 @@ export default function AdminRecordsPage() {
     fetchAllCollections()
   }, [])
 
-  function fetchList() {
-    axios.get('/api/record/list').then(res => {
+  function fetchList(collection = "") {
+    axios.get('/api/record/list', {
+      params: {
+        collection
+      }
+    }).then(res => {
       setRequesting(false)
       if (res.status === 200 && res.data.code) {
         setRecords(res.data.data)
@@ -50,7 +54,7 @@ export default function AdminRecordsPage() {
   }
 
   function createHandler() {
-    createRecordRef.current.show()
+    createRecordRef.current.show(collectionOptions)
   }
   function createCasesHandler(record_id, case_id) {
     createCasesRef.current.show(record_id, case_id)
@@ -59,6 +63,12 @@ export default function AdminRecordsPage() {
   function copyMockID(id) {
     toast.success("Mock ID has been copied to clipboard")
     copyToClipboard(id)
+  }
+
+  function filterByCollection(e, data) {
+    if(data.value) {
+      fetchList(data.value);
+    }
   }
 
   return (
@@ -72,6 +82,7 @@ export default function AdminRecordsPage() {
           clearable
           selection
           options={collectionOptions}
+          onChange={filterByCollection}
         />
       </div>
       <Table striped compact>

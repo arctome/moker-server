@@ -24,14 +24,12 @@ export default async function MockCreateApi(event) {
         if(mockData.name) patchData.name = mockData.name;
         if(mockData.url) patchData.url = mockData.url;
         if(mockData.collections && Array.isArray(mockData.collections)) {
-            patchData.collections = mockData.collections.join(",");
+            patchData.collections = mockData.collections;
         }
         if(mockData.private_read === 'on') patchData.private_read = true;
         await Record.UpdateRecordMetadata(userid, mockData.record_id, patchData).catch(e => { throw e })
         return new Response(JSON.stringify({
-            code: 1, data: {
-                record_id
-            }
+            code: 1
         }))
     } catch (e) {
         return new Response(e.message, {

@@ -22,11 +22,13 @@ addEventListener("fetch", (event) => {
     }));
     app.use(async ctx => {
       if (ctx.req.url.pathname.startsWith('/admin') && ctx.req.url.pathname !== '/login') {
-        let checkResult = await UserVerify(event);
+        let checkResult = await UserVerify(event).catch(e => {
+          throw e
+        });
         if (!checkResult.ok) {
           ctx.res.status = 302;
           ctx.res.headers["Location"] = '/login'
-          ctx.res.headers["Set-Cookie"] = checkResult.cookie
+          if(checkResult.cookie) ctx.res.headers["Set-Cookie"] = checkResult.cookie
           ctx.end()
         }
       }
