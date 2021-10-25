@@ -4375,10 +4375,10 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
-koaw-js@^0.0.3-canary.1:
-  version "0.0.3-canary.1"
-  resolved "https://registry.yarnpkg.com/koaw-js/-/koaw-js-0.0.3-canary.1.tgz#c29cbe81ed93444bfd92001fe4cc36e269339ef2"
-  integrity sha512-k6cYXf3ZFs4FYco9FPp4TIIVap7d3f4VqVt2iS1PZaQYrnWcsDTffar4AIJu3zwz8jkTPHOcG42lLCI6hSdABw==
+koaw-js@^0.0.3-canary.2:
+  version "0.0.3-canary.2"
+  resolved "https://registry.yarnpkg.com/koaw-js/-/koaw-js-0.0.3-canary.2.tgz#5a9648047cd98aae0e0c73cb6dd3933dbb744bc2"
+  integrity sha512-SYZmLXLLME7MBgtTVFUdhk1Tsj3m09ZTuv7DFLrkKOVA1XOq44/+qfEQt/Dcq2IcP48tOS10H/UW7FnIc3WuHg==
   dependencies:
     path-to-regexp "^6.2.0"
 
