@@ -2,9 +2,10 @@
 
 > Example Online Server is: https://moker.arcto.xyz
 
-> Example Admin User: admin
->
-> Password: superstrongpassword
+| Test Env Account  | value  |
+|---|---|
+| Account  | admin  |
+| Password  | superstrongpassword  |
 
 ## Setup
 
