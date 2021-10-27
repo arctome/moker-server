@@ -116,12 +116,12 @@ const Record = {
         if (!user_id || !record_id) throw new Error("Requied fields missing");
         let record = await MOKER_STORAGE_RECORD.getWithMetadata(record_id);
         if (!record) throw new Error("Required key not found");
-        if (record.metadata.owner.user_id !== user_id) return false;
+        if (record.metadata.owner_id !== user_id) return false;
         await MOKER_STORAGE_RECORD.delete(record_id).catch(e => {
             throw new Error("KV write error");
         })
         let cleanCasesQuene = []
-        record.split(",").forEach(case_id => {
+        record.value.split(",").forEach(case_id => {
             cleanCasesQuene.push(MOKER_STORAGE_CASES.delete(record_id + ':' + case_id));
         })
         await Promise.all(cleanCasesQuene).catch(e => { console.log("Errors occur in deleting " + record_id + "'s cases (" + e.message + ")") })

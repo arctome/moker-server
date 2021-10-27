@@ -63,7 +63,7 @@ export default function LoginPage() {
           </Segment>
         </Form>
         <Message>
-          New to us? <a href='#'>Sign Up</a>
+          New to us? Contact the Admin to invite you.
         </Message>
       </Grid.Column>
     </Grid>

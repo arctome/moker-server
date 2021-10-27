@@ -41,7 +41,7 @@ export default function Index() {
               <span><Icon name="github" />GitHub Repository</span>
               <Icon name='right arrow' />
             </Button>
-            <a className="deploy-on-worker" href="https://deploy.workers.cloudflare.com/?url=https://github.com/arctome/moker-server" title="Deploy Moker Server"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy Moker Server to Cloudflare Workers" /></a>
+            <a className="deploy-on-worker" href="https://deploy.workers.cloudflare.com/?url=https://github.com/arctome/moker-server" title="Deploy Moker Server"><img src="https://deploy.workers.cloudflare.com/button" alt="Deploy Moker Server to Cloudflare Workers" height="36" /></a>
           </p>
         </div>
         <div>

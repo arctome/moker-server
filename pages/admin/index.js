@@ -21,7 +21,7 @@ export default function AdminIndexPage() {
                 Welcome to Moker Server, you can modify the mock records and create new records.
               </Item.Description>
               <Item.Extra>
-                <Button primary floated='right'>
+                <Button as="a" href="/admin/records" primary floated='right'>
                   Go to Library
                   <Icon name='chevron right' />
                 </Button>
@@ -36,8 +36,8 @@ export default function AdminIndexPage() {
                 Use the extension to redirect the "marked" requests to the Moker Server.
               </Item.Description>
               <Item.Extra>
-                <Button primary floated='right'>
-                  Chrome Extension Store
+                <Button as="a" href="https://github.com/arctome/moker-chrome-extension/releases" target="_blank" primary floated='right'>
+                  Github Release
                   <Icon name='chevron right' />
                 </Button>
               </Item.Extra>

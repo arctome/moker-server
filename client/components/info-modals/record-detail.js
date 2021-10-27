@@ -30,15 +30,30 @@ function RecordDetailModal(props, ref) {
     function updateRecordHandler(e) {
         e.preventDefault();
         let formVal = collectFormData(e.target)
-        if(!data.record_id) {
+        if (!data.record_id) {
             toast.error("No record id detected!")
             return;
         }
         formVal.record_id = data.record_id;
         formVal.collections = currentCollections
         axios.post('/api/record/update', formVal).then(res => {
-            if(res.status === 200 && res.data.code) {
+            if (res.status === 200 && res.data.code) {
                 toast.success("Record updated successfully");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 500)
+            } else {
+                toast.error(res.data.msg || "Unknow error occurs");
+                console.log(res)
+            }
+        }).catch(err => {
+            toast.error(err.message || "Axios error")
+        })
+    }
+    function delRecordHandler(id) {
+        axios.post('/api/record/delete', {record_id: id}).then(res => {
+            if (res.status === 200 && res.data.code) {
+                toast.success("Record deleted successfully");
                 setTimeout(() => {
                     window.location.reload()
                 }, 500)
@@ -154,17 +169,20 @@ function RecordDetailModal(props, ref) {
                         icon='trash'
                         negative
                         loading={requesting}
+                        type='button'
+                        onClick={() => { delRecordHandler(data.record_id) }}
                     />
                     <Button
                         content="Create Case"
                         labelPosition='right'
                         icon='plus'
+                        type='button'
                         onClick={() => { createCasesHandler(data.record_id) }}
                     />
                 </div>
 
                 <div>
-                    <Button color='black' onClick={() => setOpen(false)}>
+                    <Button color='black' onClick={() => setOpen(false)} type='button'>
                         Close
                     </Button>
                     <Button
@@ -173,6 +191,7 @@ function RecordDetailModal(props, ref) {
                         icon='check'
                         positive
                         loading={requesting}
+                        type='submit'
                     />
                 </div>
             </Modal.Actions>

@@ -1,15 +1,18 @@
-# Flareact Template
+# Moker Server
 
-Get started with Flareact by installing [Wrangler](https://github.com/cloudflare/wrangler) and running:
+> Example Online Server is: https://moker.arcto.xyz
+
+> Example Admin User: admin
+>
+> Password: superstrongpassword
+
+## Setup
 
 ```bash
-wrangler generate my-project https://github.com/flareact/flareact-template
+git clone https://github.com/arctome/moker-server.git
+# Modify your own wrangler.toml
+yarn install && yarn deploy
+# Or
+# npm install && npm run deploy
+
 ```
-
-Next, fill in `account_id` and `name` inside your `wrangler.toml` file.
-
-Finally, run `yarn dev` to see magic happen 🎉
-
-Go edit a page in your `/pages` directory to get started 👍
-
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button?paid=true)](https://deploy.workers.cloudflare.com/?url=https://github.com/flareact/flareact-template&paid=true)

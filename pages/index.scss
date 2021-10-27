@@ -47,13 +47,20 @@ section#open-source {
     div {
         padding: 20px;
         p > a.deploy-on-worker {
-            width: 184px;
-            height: 39px;
+            width: auto;
+            height: 36px;
             display: inline-block;
             vertical-align: middle;
         }
         .github-btn {
             vertical-align: middle;
+        }
+    }
+}
+@media only screen and (max-width: 460px) {
+    section#open-source {
+        .button {
+            margin-bottom: 10px;
         }
     }
 }
