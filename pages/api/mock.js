@@ -16,8 +16,8 @@ export default async function MockApi(event) {
         if (!isExist) return new Response(null, { status: 403 });
         const user_id = isExist.user_id;
         // get mock_id & case_id from url params
-        let mock_id = getParam(event, "mock_id")
-        let case_id = getParam(event, "case_id")
+        let mock_id = getParam(event, "__internal_record_id__")
+        let case_id = getParam(event, "__internal_case_id__")
         if (!mock_id) return new Response(null, { status: 404 });
         // const record = await Record.ReadFullRecord(user_id, mock_id).catch(e => { throw e });
         // if (!record || Object.keys(record.cases).length < 1) return new Response(null, { status: 404 });
@@ -46,7 +46,6 @@ export default async function MockApi(event) {
                 const resp = await fetch(caseData.url, {...event.request})
                 return resp;
             }
-            console.log(typeof caseData.body)
             return new Response(caseData.body, {
                 headers: {
                     "Content-Type": caseData.content_type

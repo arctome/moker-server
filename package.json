@@ -30,6 +30,8 @@
     "miniflare": "^1.4.1",
     "postcss": "^8.3.11",
     "postcss-loader": "4.2.0",
+    "sass": "^1.43.4",
+    "sass-loader": "10.2.0",
     "url-loader": "^4.1.1"
   }
 }

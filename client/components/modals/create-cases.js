@@ -85,7 +85,6 @@ function CreateCasesModal(props, ref) {
     axios.get('/api/cases/detail', { params: { record_id, case_id } }).then(res => {
       if (res.status === 200 && res.data.code) {
         setFormData({ ...res.data.data, case_id });
-
       } else {
         console.log(res)
       }
